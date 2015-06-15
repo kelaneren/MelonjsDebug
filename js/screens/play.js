@@ -1,9 +1,14 @@
 game.PlayScreen = me.ScreenObject.extend({
+    init: function () {
+        this.counter = 0;
+    },
     /**
      *  action to perform on state change
      */
     onResetEvent: function() {
         // load a level
+        this.counter += 1;
+        console.log("play screen counter "+ this.counter);
         me.levelDirector.loadLevel("level01");
 
         // add our HUD to the game world
