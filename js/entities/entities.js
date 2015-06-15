@@ -50,21 +50,25 @@ game.ClickablePlayer = game.PlayerEntity.extend({
         this._super(me.Entity, 'init', [x, y, settings]);
 
         this.isClickable = true;
+        var _this = this;
+        this.clicked = function(event) {
+            if ((event.which === 1 || me.device.touch) && _this.isClickable) {
+                _this.updated = true;
+                return _this.onClick(event);
+            }
+        }
 
         // register on mouse event
-        me.input.registerPointerEvent("pointerdown", this, this.clicked.bind(this));
-    },
-    clicked : function (event) {
-        // Check if left mouse button is pressed OR if device has touch
-        if ((event.which === 1 || me.device.touch) && this.isClickable) {
-            this.updated = true;
-            return this.onClick(event);
-        }
+        me.input.registerPointerEvent("pointerdown", this, this.clicked);
     },
 
     onClick : function () {
         console.log("clicked player");
         me.state.change(me.state.EDIT);
         return false;
+    },
+
+    onDeactivateEvent: function () {
+        me.input.releasePointerEvent("pointerdown", this, this.clicked);
     }
 });
